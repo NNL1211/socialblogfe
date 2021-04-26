@@ -25,7 +25,7 @@ const Header = () => {
     if (checkLogin) {
       dispatch(userActions.getUser());
     }
-  }, [dispatch, checkLogin]);
+  }, [checkLogin]);
 
   return (
     <header

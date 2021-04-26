@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../redux/actions/user.action";
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const ProfilePage = () => {
     name: currentUser && currentUser.data.name,
     avatarUrl: currentUser && currentUser.data.avatarUrl,
   });
+  const notify = () => toast("You look so ngu !");
 
   const handleEditAvatar = (e) => {
     e.preventDefault();
@@ -170,7 +172,7 @@ const ProfilePage = () => {
               </div>
             ) : (
               <div className="group group--btn">
-                <button type="submit">Update</button>
+                <button type="submit" onClick={notify} >Update</button>
                 <button type="cancle" onClick={handleCancle} className="cancel">
                   Cancel
                 </button>

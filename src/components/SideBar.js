@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import noImg from "../img/no-image.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { userActions } from "../redux/actions/user.action";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser.data);
   const checkLogin = localStorage.getItem("accessToken");
-
+  const history = useHistory();
   const handleLogout = () => {
     localStorage.clear();
+    history.go(0)
   };
 
   useEffect(() => {

@@ -51,6 +51,7 @@ const AccountPage = () => {
   useEffect(() => {
     if (redirectTo) {
       history.push(redirectTo);
+      history.go(0)
       setStatus(false);
       dispatch(routeActions.removeRedirectTo());
     }

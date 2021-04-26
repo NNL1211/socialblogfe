@@ -6,6 +6,7 @@ const getUser = () => async (dispatch) => {
     const data = await api.get("/users/me");
     dispatch({ type: "GETUSER_REQUEST_SUCCESS", payload: data });
   } catch (error) {
+    console.log(error.message)
     dispatch({ type: "GETUSER_REQUEST_FAIL", payload: error.message });
   }
 };
