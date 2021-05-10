@@ -21,4 +21,17 @@ const editUser = ({ name, avatarUrl }) => async (dispatch) => {
   }
 };
 
-export const userActions = { getUser, editUser };
+const getAllUser = (currentPage) => async (dispatch) => {
+  try {
+    dispatch({ type: "GETALLUSER_REQUEST_START", payload: null });
+    const data = await api.get(`/users?page=${currentPage}&limit=10`);
+    dispatch({
+      type: "GETALLUSER_REQUEST_SUCCESS",
+      payload: { data: data, currentPage: currentPage },
+    });
+  } catch (error) {
+    dispatch({ type: "GETALLUSER_REQUEST_FAIL", payload: error.message });
+  }
+};
+
+export const userActions = { getUser, editUser, getAllUser };

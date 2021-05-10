@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { BlogActions } from "../redux/actions/blog.action";
 import { routeActions } from "../redux/actions/route.action";
 
-const AddBlogPage = () => {
-  const dispatch = useDispatch();
+const EditBlogPage = () => {
+  const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const singleBlog = useSelector((state) => state.blog.singleBlog.data);
   const redirectTo = useSelector((state) => state.route.redirectTo);
+  const [someBoolean, setSomeBoolean] = useState(true);
   const [formInput, setFormInput] = useState({
-    title: "",
-    content: "",
-    images: "",
+    title: singleBlog && singleBlog.data.title,
+    content: singleBlog && singleBlog.data.content,
+    images: singleBlog && singleBlog.data.images[0],
   });
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    setSomeBoolean(false);
+  };
+
+  const handleCancle = (e) => {
+    e.preventDefault();
+    setSomeBoolean(true);
+  };
 
   const handleChange = (e) => {
     console.log({ ...formInput, [e.target.name]: e.target.value });
     setFormInput({ ...formInput, [e.target.name]: e.target.value });
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { title, content, images } = formInput;
-    dispatch(BlogActions.createBlog({ title, content, images }));
-    e.target.reset();
-  };
-
-  useEffect(() => {
-    if (redirectTo) {
-      history.push(redirectTo);
-      dispatch(routeActions.removeRedirectTo());
-    }
-  }, [dispatch, history, redirectTo]);
 
   const uploadWidget = (e) => {
     e.preventDefault();
@@ -53,10 +52,26 @@ const AddBlogPage = () => {
     );
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { title, content, images } = formInput;
+    dispatch(BlogActions.editBlog({ title, content, images }, id));
+  };
+
+  useEffect(() => {
+    dispatch(BlogActions.getSingleBlog(id));
+
+    if (redirectTo) {
+      history.push(redirectTo);
+      document.location.reload();
+      dispatch(routeActions.removeRedirectTo());
+    }
+  }, [id, dispatch, redirectTo, history]);
+
   return (
     <div id="add-blog" className="add-blog">
       <div className="container">
-        <h3 className="add-blog__title">Add Blog</h3>
+        <h3 className="add-blog__title">Edit Blog</h3>
         <form className="add-blog__form" onSubmit={handleSubmit}>
           <div className="group">
             <svg
@@ -78,15 +93,20 @@ const AddBlogPage = () => {
               type="text"
               name="title"
               placeholder="Title"
+              value={
+                someBoolean ? (singleBlog && singleBlog.data.title) || "" : null
+              }
               onChange={handleChange}
             />
           </div>
           <button
             type="button"
-            className={`${formInput.images ? "active" : ""}`}
+            className={`${
+              singleBlog && singleBlog.data.images[0] ? "active" : ""
+            }`}
             onClick={uploadWidget}
           >
-            {formInput.images ? (
+            {singleBlog && singleBlog.data.images[0] ? (
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -139,16 +159,32 @@ const AddBlogPage = () => {
             <textarea
               name="content"
               placeholder="Content"
+              value={
+                someBoolean
+                  ? (singleBlog && singleBlog.data.content) || ""
+                  : null
+              }
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className="group group--full">
-            <button type="submit">Share</button>
-          </div>
+          {someBoolean ? (
+            <div className="group group--full">
+              <button className="edit" onClick={handleEdit}>
+                Edit
+              </button>
+            </div>
+          ) : (
+            <div className="group group--btn">
+              <button type="submit">Update</button>
+              <button type="cancle" onClick={handleCancle} className="cancel">
+                Cancel
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>
   );
 };
 
-export default AddBlogPage;
+export default EditBlogPage;

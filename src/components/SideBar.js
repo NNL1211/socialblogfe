@@ -3,26 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import noImg from "../img/no-image.png";
 import { Link, useHistory } from "react-router-dom";
 import { userActions } from "../redux/actions/user.action";
+import { friendActions } from "../redux/actions/friends.action";
+import { authActions } from "../redux/actions/auth.action";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser.data);
-  const checkLogin = localStorage.getItem("accessToken");
-  const history = useHistory();
+  const receivedRequest = useSelector((state) => state.friends.received.data);
+  const isAuth = useSelector((state) => state.auth.isAuth);
+  console.log(receivedRequest);
+
   const handleLogout = () => {
     localStorage.clear();
-    history.go(0)
+    dispatch(authActions.logoutUser());
+  };
+
+  const handleAccept = (id) => {
+    dispatch(friendActions.acceptRequest(id));
+  };
+
+  const handleDecline = (id) => {
+    dispatch(friendActions.declineRequest(id));
   };
 
   useEffect(() => {
-    if (checkLogin) {
+    if (isAuth) {
       dispatch(userActions.getUser());
+      dispatch(friendActions.receivedRequest());
     }
-  }, [dispatch, checkLogin]);
+  }, [dispatch]);
 
   return (
     <nav id="sidebar" className="sidebar">
-      {checkLogin ? (
+      {isAuth ? (
         <div className="sidebar__content">
           <div className="author">
             {currentUser && currentUser.data.avatarUrl ? (
@@ -46,16 +59,70 @@ const SideBar = () => {
               Logout
             </button>
           </div>
-          {/* <div className="friends">
-            <h3 className="friends__title"></h3>
-            <ul className="friends__list">
-              <li>
-                <div className="avatar"></div>
-                <div className="username"></div>
-                <div className="btns"></div>
-              </li>
-            </ul>
-          </div> */}
+          {receivedRequest && receivedRequest.data.users.length ? (
+            <div className="friends">
+              <h3 className="friends__title">Received Requests</h3>
+              <ul className="friends__list">
+                {receivedRequest &&
+                  receivedRequest.data.users.map((user) => (
+                    <li key={user._id}>
+                      {user.avatarUrl ? (
+                        <div
+                          className="avatar"
+                          style={{
+                            backgroundImage: `url('${user.avatarUrl}')`,
+                          }}
+                        ></div>
+                      ) : (
+                        <div
+                          className="avatar"
+                          style={{ backgroundImage: `url('${noImg}')` }}
+                        ></div>
+                      )}
+                      <div className="username">{user.name}</div>
+                      <div className="btns">
+                        <button onClick={() => handleAccept(user._id)}>
+                          <svg
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="far"
+                            data-icon="check-circle"
+                            className="svg-inline--fa fa-check-circle fa-w-16"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z"
+                            ></path>
+                          </svg>
+                        </button>
+                        <button onClick={() => handleDecline(user._id)}>
+                          <svg
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="far"
+                            data-icon="times-circle"
+                            className="svg-inline--fa fa-times-circle fa-w-16"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"
+                            ></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       ) : (
         <Link to="/login" className="sidebar__not-login not-hover">

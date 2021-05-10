@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser.data);
-  console.log(currentUser);
   const loading = useSelector((state) => state.user.loading);
 
   const [someBoolean, setSomeBoolean] = useState(true);
@@ -64,7 +63,7 @@ const ProfilePage = () => {
   return (
     <div id="add-blog" className="add-blog">
       {loading ? (
-        <div class="loader"></div>
+        <div className="loader"></div>
       ) : (
         <div className="container">
           <h3 className="add-blog__title">Profile Page</h3>

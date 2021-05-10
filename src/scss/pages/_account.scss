@@ -106,10 +106,38 @@
           @include tranform_c(translateY(-50%));
         }
 
-        &--email svg {}
+        &--name {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          input {
+            width: calc(100% - 50px);
+          }
+
+          button {
+            color: $grey-dark;
+            width: 40px;
+            height: 40px;
+            position: relative;
+
+            &.active {
+              color: $red-light;
+            }
+
+            svg {
+              position: absolute;
+              width: 28px;
+              height: 28px;
+              top: 50%;
+              left: 50%;
+              @include tranform_c(translate(-50%, -50%));
+            }
+          }
+        }
       }
 
-      button {
+      button[type=submit] {
         background-image: linear-gradient(to right, $red-light, $red-dark);
         border-radius: 100px;
         color: $white;

@@ -3,13 +3,19 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../redux/actions/user.action";
+import { authActions } from "../redux/actions/auth.action";
 
 const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [status, setStatus] = useState("");
   const currentUser = useSelector((state) => state.user.currentUser.data);
-  const checkLogin = localStorage.getItem("accessToken");
+  const isAuth = useSelector((state) => state.auth.isAuth);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(authActions.logoutUser());
+  };
 
   useEffect(() => {
     window.onscroll = () => {
@@ -22,10 +28,10 @@ const Header = () => {
   }, [status]);
 
   useEffect(() => {
-    if (checkLogin) {
+    if (isAuth) {
       dispatch(userActions.getUser());
     }
-  }, [checkLogin]);
+  }, [dispatch]);
 
   return (
     <header
@@ -52,10 +58,10 @@ const Header = () => {
         </svg>
       </Link>
       <div className="header__right">
-        {checkLogin ? (
+        {isAuth ? (
           <div className="list">
             <Link to="/add">Create Blog</Link>
-            <Link to="/admin" className="current-user">
+            <div className="current-user">
               <p className="username">{currentUser && currentUser.data.name}</p>
               {currentUser && currentUser.data.avatarUrl ? (
                 <div
@@ -70,8 +76,21 @@ const Header = () => {
                   style={{ backgroundImage: `url('${noImg}')` }}
                 ></div>
               )}
-              <div className="dropdown"></div>
-            </Link>
+              <div className="dropdown">
+                <Link to="/admin/profile" className="not-hover">
+                  Profile
+                </Link>
+                <Link to="/admin/blogs" className="not-hover">
+                  Blog
+                </Link>
+                <Link to="/admin/friends" className="not-hover">
+                  Friends
+                </Link>
+                <Link to="/" onClick={handleLogout} className="not-hover">
+                  Logout
+                </Link>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="list">
