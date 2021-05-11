@@ -78,4 +78,4 @@ const loginGoogleRequest = (access_token) => async(dispatch)=>{
   }
 }
 
-export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest };
+export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest,loginGoogleRequest };
