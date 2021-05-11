@@ -97,7 +97,14 @@ const AccountPage = () => {
       <div className="container container--small container--signin">
         <div className="account__form">
           <h3 className="title">Sign in to Te Quiero</h3>
-          <div className="social">
+           <FacebookLogin
+            appId={FB_APP_ID}
+            autoLoad={true}
+            fields="name,email,picture"
+            callback={loginWithFacebook}
+            cssClass="my-facebook-button-class"
+            icon="fab fa-facebook-f fa-lg"
+          />
           <GoogleLogin
                 className="google-btn d-flex justify-content-center"
                 clientId={GOOGLE_CLIENT_ID}
@@ -107,16 +114,18 @@ const AccountPage = () => {
                   console.log("GOOGLE LOGIN ERROR:", err);
                 }}
                 cookiePolicy="single_host_origin"
-              />
-          <FacebookLogin
+              />   
+          {/* <FacebookLogin
               appId={FB_APP_ID}
               fields="name,email,picture"
               callback={(user)=>loginWithFacebook(user)}
               onFailure={(error) => {
                 console.log("Facebook login error:", error);
               }}
-            />
-            <button callback={(user)=>loginWithFacebook(user)}>
+            icon="fa-facebook"
+            /> */}
+          <div className="social">
+            {/* <button callback={(user)=>loginWithFacebook(user)}>
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -132,8 +141,8 @@ const AccountPage = () => {
                   d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
                 ></path>
               </svg>
-            </button>
-            <button>
+            </button> */}
+            {/* <button>
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -149,7 +158,7 @@ const AccountPage = () => {
                   d="M386.061 228.496c1.834 9.692 3.143 19.384 3.143 31.956C389.204 370.205 315.599 448 204.8 448c-106.084 0-192-85.915-192-192s85.916-192 192-192c51.864 0 95.083 18.859 128.611 50.292l-52.126 50.03c-14.145-13.621-39.028-29.599-76.485-29.599-65.484 0-118.92 54.221-118.92 121.277 0 67.056 53.436 121.277 118.92 121.277 75.961 0 104.513-54.745 108.965-82.773H204.8v-66.009h181.261zm185.406 6.437V179.2h-56.001v55.733h-55.733v56.001h55.733v55.733h56.001v-55.733H627.2v-56.001h-55.733z"
                 ></path>
               </svg>
-            </button>
+            </button> */}
           </div>
           <p className="note">or use your email account:</p>
           <form className="form" onSubmit={handleSignInSubmit}>
