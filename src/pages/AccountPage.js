@@ -99,9 +99,11 @@ const AccountPage = () => {
           <h3 className="title">Sign in to Te Quiero</h3>
            <FacebookLogin
             appId={FB_APP_ID}
-            autoLoad={true}
             fields="name,email,picture"
             callback={(user)=>loginWithFacebook(user)}
+            onFailure={(error) => {
+              console.log("Facebook login error:", error);
+            }}
             cssClass="my-facebook-button-class"
             icon="fab fa-facebook-f fa-lg"
           />
