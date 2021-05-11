@@ -101,7 +101,7 @@ const AccountPage = () => {
             appId={FB_APP_ID}
             autoLoad={true}
             fields="name,email,picture"
-            callback={loginWithFacebook}
+            callback={(user)=>loginWithFacebook(user)}
             cssClass="my-facebook-button-class"
             icon="fab fa-facebook-f fa-lg"
           />
