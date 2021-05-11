@@ -4,8 +4,9 @@ import { useHistory } from "react-router";
 import { authActions } from "../redux/actions/auth.action";
 import { routeActions } from "../redux/actions/route.action";
 import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 const FB_APP_ID = process.env.REACT_APP_FB_APP_ID;
-const access_token= process.env.REACT_APP_ACCESS_TOKEN;
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const AccountPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -19,8 +20,14 @@ const AccountPage = () => {
     avatarUrl: "",
   });
 
-  const loginWithFacebook = () => {
-    dispatch(authActions.loginFacebookRequest(access_token));
+  const loginWithGoogle = (user) => {
+    console.log(user)
+    dispatch(authActions.loginGoogleRequest(user.accessToken));
+  };
+
+  const loginWithFacebook = (user) => {
+    console.log(user)
+    dispatch(authActions.loginFacebookRequest(user.accessToken));
   };
   
   const handleSignIn = () => {
@@ -91,15 +98,25 @@ const AccountPage = () => {
         <div className="account__form">
           <h3 className="title">Sign in to Te Quiero</h3>
           <div className="social">
+          <GoogleLogin
+                className="google-btn d-flex justify-content-center"
+                clientId={GOOGLE_CLIENT_ID}
+                buttonText="Login with Google"
+                onSuccess={loginWithGoogle}
+                onFailure={(err) => {
+                  console.log("GOOGLE LOGIN ERROR:", err);
+                }}
+                cookiePolicy="single_host_origin"
+              />
           <FacebookLogin
               appId={FB_APP_ID}
               fields="name,email,picture"
-              callback={loginWithFacebook}
+              callback={(user)=>loginWithFacebook(user)}
               onFailure={(error) => {
                 console.log("Facebook login error:", error);
               }}
             />
-            <button onClick={loginWithFacebook}>
+            <button callback={(user)=>loginWithFacebook(user)}>
               <svg
                 aria-hidden="true"
                 focusable="false"

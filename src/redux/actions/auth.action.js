@@ -60,5 +60,22 @@ const loginFacebookRequest = (access_token) => async(dispatch)=>{
     console.log(error.message);
   }
 }
+const loginGoogleRequest = (access_token) => async(dispatch)=>{
+  try {
+    dispatch({ type: "LOGINGOOGLE_REQUEST_START", payload: null });
+    const res = await api.post("/auth/login/google",{access_token});
+    localStorage.setItem("accessToken", res.data.data.accessToken);
+    api.defaults.headers["authorization"] =
+      "Bearer " + localStorage.getItem("accessToken");
+    dispatch(routeActions.redirect("/"));
+    dispatch({
+      type: "LOGINGOOGLE_REQUEST_SUCCESS",
+      payload: res.data.data.accessToken,
+    });
+  } catch (error) {
+    dispatch({ type: "LOGINGOOGLE_REQUEST_FAIL", payload: null });
+    console.log(error.message);
+  }
+}
 
 export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest };
