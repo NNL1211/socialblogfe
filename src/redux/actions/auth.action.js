@@ -43,4 +43,22 @@ const logoutUser = () => async (dispatch) => {
   }
 };
 
-export const authActions = { loginUser, registerUser, logoutUser };
+const loginFacebookRequest = (access_token) => async(dispatch)=>{
+  try {
+    dispatch({ type: "LOGINFB_REQUEST_START", payload: null });
+    const res = await api.post("/auth/login/facebook",{access_token});
+    localStorage.setItem("accessToken", res.data.data.accessToken);
+    api.defaults.headers["authorization"] =
+      "Bearer " + localStorage.getItem("accessToken");
+    dispatch(routeActions.redirect("/"));
+    dispatch({
+      type: "LOGINFB_REQUEST_SUCCESS",
+      payload: res.data.data.accessToken,
+    });
+  } catch (error) {
+    dispatch({ type: "LOGINFB_REQUEST_FAIL", payload: null });
+    console.log(error.message);
+  }
+}
+
+export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest };

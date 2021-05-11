@@ -6,11 +6,13 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case "LOGINFB_REQUEST_START":
     case "LOGIN_REQUEST_START":
     case "REGISTER_REQUEST_START":
     case "LOGOUT_REQUEST_START":
       state.loading = true;
       break;
+    case "LOGINFB_REQUEST_FAIL":
     case "LOGIN_REQUEST_FAIL":
     case "REGISTER_REQUEST_FAIL":
     case "LOGOUT_REQUEST_FAIL":
@@ -29,6 +31,9 @@ const authReducer = (state = initialState, action) => {
       state.isAuth = "";
       state.loading = false;
       break;
+    case "LOGINFB_REQUEST_SUCCESS":
+      state.loading = false;
+      state.isAuth = payload;
     default:
       break;
   }
