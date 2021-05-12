@@ -78,4 +78,19 @@ const loginGoogleRequest = (access_token) => async(dispatch)=>{
   }
 }
 
-export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest,loginGoogleRequest };
+const verifyEmail = (code) => async (dispatch) => {
+	dispatch({ type: "VERIFY_EMAIL_REQUEST", payload: null });
+	try {
+		const res = await api.post("/users/verify_email", { code });
+    console.log(res);
+    localStorage.setItem("accessToken", res.data.data.accessToken);
+    api.defaults.headers["authorization"] =
+      "Bearer " + localStorage.getItem("accessToken");
+      // dispatch(routeActions.redirect("/"));
+		dispatch({ type: "VERIFY_EMAIL_SUCCESS", payload: res.data.data.accessToken });
+	} catch (error) {
+		dispatch({ type:"VERIFY_EMAIL_FAILURE", payload: error });
+	}
+};
+
+export const authActions = { loginUser, registerUser, logoutUser,loginFacebookRequest,loginGoogleRequest,verifyEmail };

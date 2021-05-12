@@ -8,7 +8,7 @@ import AccountPage from "../pages/AccountPage";
 import AddBlogPage from "../pages/AddBlogPage";
 import EditBlogPage from "../pages/EditBlogPage";
 import NotFoundPage from "../pages/NotFoundPage";
-
+import VerifyEmailPage from "../pages/VerifyEmailPage"
 const PublicLayout = () => {
   return (
     <div id="home">
@@ -17,6 +17,7 @@ const PublicLayout = () => {
         <Route exact path="/login" component={AccountPage} />
         <Route exact path="/add" component={AddBlogPage} />
         <Route exact path="/edit/:id" component={EditBlogPage} />
+        <Route exact path="/verify" component={VerifyEmailPage} />
         <Route exact path="/:id" component={DetailPage} />
         <Route path="*" component={NotFoundPage} />
       </Switch>

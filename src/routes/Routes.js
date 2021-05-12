@@ -12,6 +12,7 @@ import AdminLayout from "./AdminLayout";
 import PublicLayout from "./PublicLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
+
 const Routes = () => {
   return (
     <div>
@@ -20,6 +21,7 @@ const Routes = () => {
       <Switch>
         <ProtectedRoute path="/admin" component={AdminLayout} />
         <Route path="/" component={PublicLayout} />
+        
       </Switch>
       <Footer />
     </div>
