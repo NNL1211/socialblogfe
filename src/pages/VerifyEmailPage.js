@@ -27,7 +27,7 @@ const VerifyEmailPage = () => {
             <div className="container container--small container--signin">
             <div className="account__form">
             <div className="social"></div>
-            <h1>EMAIL VERIFICATION</h1>
+            <h1>EMAIL VERIFICATION !!</h1>
             </div>
             </div>
         </div>
